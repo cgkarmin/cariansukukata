@@ -60,24 +60,20 @@ if st.button("Cari"):
 
             # Paparkan hasil dalam jadual dengan Suku Kata, Perkataan, dan Pantun
             st.write(f"**Menampilkan maksimum 5 pantun yang mengandungi '{suku_kata}' dalam kategori {kategori_pilihan}:**")
-            edited_df = st.data_editor(df_hasil, use_container_width=True, num_rows="dynamic", key="pantun_table")
+            selected_index = st.data_editor(df_hasil, use_container_width=True, num_rows="dynamic", key="pantun_table", selection_mode="single")
 
-            # Apabila klik dua kali pada baris, pantun dipaparkan dalam format serangkap 4 baris
-            selected_rows = edited_df.loc[edited_df.index.intersection(st.session_state.get('pantun_table', {}).get('edited_rows', []))]
-
-            if not selected_rows.empty:
-                selected_pantun = selected_rows.iloc[0]["pantun"]
+            # Apabila pengguna klik satu pantun, paparkan keseluruhan rangkap
+            if selected_index:
+                selected_pantun = df_hasil.iloc[selected_index[0]]["pantun"]
 
                 # Tukarkan pantun kepada format serangkap (4 baris)
                 if isinstance(selected_pantun, str):
-                    # Cuba pecahkan berdasarkan pemisah yang mungkin digunakan dalam dataset
                     possible_separators = ["\n", ";", ","]  # Tambahkan pemisah lain jika perlu
                     for sep in possible_separators:
                         if sep in selected_pantun:
                             formatted_pantun = "\n".join(selected_pantun.split(sep))
                             break
                     else:
-                        # Jika tiada pemisah yang sesuai, anggap pantun sudah dalam satu baris penuh
                         formatted_pantun = selected_pantun
 
                     st.session_state.selected_pantun = formatted_pantun
