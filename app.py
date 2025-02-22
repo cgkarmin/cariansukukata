@@ -1,70 +1,74 @@
 import streamlit as st
 import pandas as pd
-from functions import cari_suku_kata  # Pastikan modul ini ada
+from functions import cari_suku_kata
 
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Judul aplikasi
-st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
+# Gaya CSS untuk memastikan input lebih kecil
+st.markdown("""
+    <style>
+        div[data-testid="stTextInput"] > div > input {
+            width: 150px !important;
+        }
+        div[data-testid="stSelectbox"] > div {
+            width: 180px !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
-# Susun layout dalam 2 kolom (satu untuk input pencarian dan kategori, satu untuk hasil)
-col1, col2 = st.columns([1, 2])  # Col1 lebih kecil, Col2 lebih lebar
+# Susun layout dalam 2 kolum (kiri = input, kanan = hasil pantun yang dipilih)
+col1, col2 = st.columns([1, 2])
 
 with col1:
-    # Buat layout pencarian lebih ringkas
-    c1, c2 = st.columns([2, 1])  # Pembagian layout untuk pencarian dan kategori
+    # **Pendekkan input carian**
+    suku_kata = st.text_input("🔍 Cari Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
 
-    with c1:
-        suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
-
-    with c2:
-        pilihan_kategori = {
-            "Rima Tengah 1": "RIMA_TENGAH_1",
-            "Rima Tengah 2": "RIMA_TENGAH_2",
-            "Rima Tengah 3": "RIMA_TENGAH_3",
-            "Rima Tengah 4": "RIMA_TENGAH_4",
-            "Rima Akhir 1": "RIMA_AKHIR_1",
-            "Rima Akhir 2": "RIMA_AKHIR_2",
-            "Rima Akhir 3": "RIMA_AKHIR_3",
-            "Rima Akhir 4": "RIMA_AKHIR_4"
-        }
-        kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
+    # **Pendekkan dropdown kategori**
+    pilihan_kategori = {
+        "Rima Tengah 1": "RIMA_TENGAH_1",
+        "Rima Tengah 2": "RIMA_TENGAH_2",
+        "Rima Tengah 3": "RIMA_TENGAH_3",
+        "Rima Tengah 4": "RIMA_TENGAH_4",
+        "Rima Akhir 1": "RIMA_AKHIR_1",
+        "Rima Akhir 2": "RIMA_AKHIR_2",
+        "Rima Akhir 3": "RIMA_AKHIR_3",
+        "Rima Akhir 4": "RIMA_AKHIR_4"
+    }
+    kategori_pilihan = st.selectbox("📂 Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
 
     # Simpan pantun terpilih dalam sesi Streamlit
     if "selected_pantun" not in st.session_state:
         st.session_state.selected_pantun = ""
 
-    # Tombol pencarian
-    if st.button("Cari"):
+    # Butang cari
+    if st.button("🔍 Cari Pantun"):
         if suku_kata:
-            kategori = pilihan_kategori[kategori_pilihan]  # Konversi kembali ke nama asli untuk pencarian
+            kategori = pilihan_kategori[kategori_pilihan]  # Tukar kembali ke nama asal untuk carian
             hasil = cari_suku_kata(suku_kata, kategori)
-
             if hasil:
                 df_hasil = pd.DataFrame(hasil)
 
-                # Tampilkan hanya 5 hasil teratas
+                # Hadkan kepada maksimum 5 pantun
                 df_hasil = df_hasil.head(5)
 
-                # Menampilkan tabel hasil
-                st.write(f"Menampilkan maksimum 5 pantun yang mengandungi '{suku_kata}' dalam kategori {kategori_pilihan}:")
-                selected_rows = st.data_editor(df_hasil, use_container_width=True, key="pantun_table", selection_mode="single")
+                # Paparkan hasil dalam jadual
+                st.write(f"**📜 Menampilkan maksimum 5 pantun yang mengandungi '{suku_kata}' dalam kategori {kategori_pilihan}:**")
+                selected_index = st.data_editor(df_hasil, use_container_width=True, num_rows="dynamic", key="pantun_table", selection_mode="single")
 
-                # Jika pengguna memilih satu pantun, tampilkan dalam format serangkap (4 baris)
-                selected_rows = st.session_state.get("pantun_table", {}).get("selected_rows", [])
-                if selected_rows and len(selected_rows) > 0:
-                    selected_pantun = df_hasil.iloc[selected_rows[0]]["pantun"]
+                # Apabila pengguna klik satu pantun, paparkan keseluruhan rangkap
+                if selected_index:
+                    selected_pantun = df_hasil.iloc[selected_index[0]]["pantun"]
 
-                    # Format pantun agar tampil per baris
+                    # Tukarkan pantun kepada format serangkap (4 baris)
                     if isinstance(selected_pantun, str):
-                        possible_separators = ["\n", ";", ","]
+                        possible_separators = ["\n", ";", ","]  # Pemisah yang mungkin digunakan
                         for sep in possible_separators:
                             if sep in selected_pantun:
                                 formatted_pantun = "\n".join(selected_pantun.split(sep))
                                 break
                         else:
-                            formatted_pantun = selected_pantun
+                            formatted_pantun = selected_pantun  # Jika tiada pemisah, paparkan asal
 
                         st.session_state.selected_pantun = formatted_pantun
             else:
@@ -72,15 +76,11 @@ with col1:
         else:
             st.warning("⚠️ Sila masukkan suku kata untuk dicari.")
 
-# **Tampilan pantun di sebelah kanan (col2)**
+# **Paparan pantun di sebelah kanan (col2)**
 with col2:
     if st.session_state.selected_pantun:
         st.subheader("📜 Pantun Terpilih:")
-        st.write(st.session_state.selected_pantun)
+        st.write(st.session_state.selected_pantun)  # Gunakan st.write() untuk format automatik
 
 # Footer
-st.markdown("---")
-st.markdown(
-    "<p style='text-align: center; font-size: 12px;'>© 2023-2025 Carian Suku Kata. Sebuah carian suku kata untuk membantu pengguna mengarang pantun.</p>",
-    unsafe_allow_html=True
-)
+st.markdown('<div class="footer">© 2023-2025 Carian Suku Kata. v1. 2008-2025. Sebuah carian suku kata berguna untuk membantu pengguna mengarang pantun.</div>', unsafe_allow_html=True)
