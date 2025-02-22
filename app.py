@@ -5,34 +5,30 @@ from functions import cari_suku_kata  # Pastikan fungsi ini tersedia
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# CSS untuk mengunci ukuran input & dropdown
+# Tambahkan CSS untuk mengunci ukuran input dan dropdown
 st.markdown(
     """
     <style>
+    /* Pusatkan elemen utama */
+    .block-container {
+        display: flex;
+        justify-content: center;
+    }
+    
     /* Kunci ukuran input */
-    div[data-baseweb="input"] {
-        width: 320px !important;  
-        max-width: 320px !important;
-        margin: auto;
+    div[data-testid="stTextInput"] {
+        width: 320px !important;
     }
 
     /* Kunci ukuran dropdown */
     div[data-baseweb="select"] {
-        width: 220px !important;  
-        max-width: 220px !important;
-        margin: auto;
+        width: 220px !important;
     }
 
     /* Pusatkan tombol "Cari" */
     div.stButton > button {
         display: block;
         margin: auto;
-    }
-
-    /* Pusatkan elemen dalam container */
-    .fixed-container {
-        display: flex;
-        justify-content: center;
     }
     </style>
     """,
@@ -42,30 +38,25 @@ st.markdown(
 # Judul aplikasi
 st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
 
-# Gunakan container agar lebar tetap
-with st.container():
-    col1, col2, col3 = st.columns([1, 1, 1])  # Kolom tengah memastikan elemen tetap di tengah
+# Gunakan columns dengan lebar tetap agar input dan dropdown tidak melebar
+col1, col2, col3 = st.columns([1, 2, 1])  # Kolom tengah lebih besar agar input tidak melebar
 
-    with col2:  # Elemen input dan dropdown dalam satu baris tetap
-        with st.container():
-            st.markdown('<div class="fixed-container">', unsafe_allow_html=True)
-            suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
-            st.markdown('</div>', unsafe_allow_html=True)
+with col2:
+    with st.container():
+        suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
 
-        with st.container():
-            st.markdown('<div class="fixed-container">', unsafe_allow_html=True)
-            pilihan_kategori = {
-                "Rima Tengah 1": "RIMA_TENGAH_1",
-                "Rima Tengah 2": "RIMA_TENGAH_2",
-                "Rima Tengah 3": "RIMA_TENGAH_3",
-                "Rima Tengah 4": "RIMA_TENGAH_4",
-                "Rima Akhir 1": "RIMA_AKHIR_1",
-                "Rima Akhir 2": "RIMA_AKHIR_2",
-                "Rima Akhir 3": "RIMA_AKHIR_3",
-                "Rima Akhir 4": "RIMA_AKHIR_4"
-            }
-            kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with st.container():
+        pilihan_kategori = {
+            "Rima Tengah 1": "RIMA_TENGAH_1",
+            "Rima Tengah 2": "RIMA_TENGAH_2",
+            "Rima Tengah 3": "RIMA_TENGAH_3",
+            "Rima Tengah 4": "RIMA_TENGAH_4",
+            "Rima Akhir 1": "RIMA_AKHIR_1",
+            "Rima Akhir 2": "RIMA_AKHIR_2",
+            "Rima Akhir 3": "RIMA_AKHIR_3",
+            "Rima Akhir 4": "RIMA_AKHIR_4"
+        }
+        kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
 
 # Tombol pencarian di tengah
 st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
