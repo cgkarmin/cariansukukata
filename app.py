@@ -58,7 +58,7 @@ if st.button("Cari"):
             # Hadkan kepada maksimum 5 pantun
             df_hasil = df_hasil.head(5)
 
-            # Paparkan hasil dalam jadual dengan Suku Kata, Perkataan, dan Pantun
+            # Paparkan hasil dalam jadual dengan pilihan klik satu baris
             st.write(f"**Menampilkan maksimum 5 pantun yang mengandungi '{suku_kata}' dalam kategori {kategori_pilihan}:**")
             selected_index = st.data_editor(df_hasil, use_container_width=True, num_rows="dynamic", key="pantun_table", selection_mode="single")
 
@@ -68,13 +68,13 @@ if st.button("Cari"):
 
                 # Tukarkan pantun kepada format serangkap (4 baris)
                 if isinstance(selected_pantun, str):
-                    possible_separators = ["\n", ";", ","]  # Tambahkan pemisah lain jika perlu
+                    possible_separators = ["\n", ";", ","]  # Pemisah yang mungkin digunakan
                     for sep in possible_separators:
                         if sep in selected_pantun:
                             formatted_pantun = "\n".join(selected_pantun.split(sep))
                             break
                     else:
-                        formatted_pantun = selected_pantun
+                        formatted_pantun = selected_pantun  # Jika tiada pemisah, paparkan asal
 
                     st.session_state.selected_pantun = formatted_pantun
 
