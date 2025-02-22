@@ -5,7 +5,7 @@ from functions import cari_suku_kata
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Gaya CSS untuk gelapkan teks dalam jadual
+# Gaya CSS untuk menggelapkan teks dalam jadual
 st.markdown("""
     <style>
         .stDataFrame div {
@@ -68,9 +68,18 @@ if st.button("Cari"):
             if not selected_rows.empty:
                 selected_pantun = selected_rows.iloc[0]["pantun"]
 
-                # Tukarkan pantun kepada format 4 baris
+                # Tukarkan pantun kepada format serangkap (4 baris)
                 if isinstance(selected_pantun, str):
-                    formatted_pantun = "\n".join(selected_pantun.replace(",", ";").split("; "))  # Tukar pemisah jika perlu
+                    # Cuba pecahkan berdasarkan pemisah yang mungkin digunakan dalam dataset
+                    possible_separators = ["\n", ";", ","]  # Tambahkan pemisah lain jika perlu
+                    for sep in possible_separators:
+                        if sep in selected_pantun:
+                            formatted_pantun = "\n".join(selected_pantun.split(sep))
+                            break
+                    else:
+                        # Jika tiada pemisah yang sesuai, anggap pantun sudah dalam satu baris penuh
+                        formatted_pantun = selected_pantun
+
                     st.session_state.selected_pantun = formatted_pantun
 
         else:
