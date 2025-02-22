@@ -1,22 +1,32 @@
 import streamlit as st
 import pandas as pd
-from functions import cari_suku_kata  # Pastikan fungsi ini tersedia
+from functions import cari_suku_kata  # Pastikan fungsi ini ada
 
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Tambahkan CSS untuk memperkecil ukuran input & dropdown
+# Tambahkan CSS untuk mengunci ukuran input dan dropdown
 st.markdown(
     """
     <style>
-    /* Menyesuaikan ukuran kotak input */
-    div[data-baseweb="input"] {
-        max-width: 300px !important;  /* Sesuaikan ukuran */
+    /* Kunci lebar input */
+    div[data-baseweb="input"] > div {
+        max-width: 350px !important;
+        width: 100% !important;
+        margin: auto;
     }
 
-    /* Menyesuaikan ukuran dropdown */
-    div[data-baseweb="select"] {
-        max-width: 200px !important;  /* Sesuaikan ukuran */
+    /* Kunci lebar dropdown */
+    div[data-baseweb="select"] > div {
+        max-width: 250px !important;
+        width: 100% !important;
+        margin: auto;
+    }
+
+    /* Memastikan tombol "Cari" tetap di tengah */
+    div.stButton {
+        display: flex;
+        justify-content: center;
     }
     </style>
     """,
@@ -26,7 +36,7 @@ st.markdown(
 # Judul aplikasi
 st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
 
-# Layout pencarian dalam satu baris
+# Input dan kategori sejajar dalam satu baris
 col1, col2 = st.columns([1, 1])
 
 with col1:
@@ -45,11 +55,8 @@ with col2:
     }
     kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
 
-# Simpan pantun terpilih dalam sesi Streamlit
-if "selected_pantun" not in st.session_state:
-    st.session_state.selected_pantun = ""
-
-# Tombol pencarian
+# Tombol pencarian di tengah
+st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
 if st.button("Cari"):
     if suku_kata:
         kategori = pilihan_kategori[kategori_pilihan]
@@ -57,15 +64,12 @@ if st.button("Cari"):
 
         if hasil:
             df_hasil = pd.DataFrame(hasil)
+            df_hasil = df_hasil.head(5)  # Menampilkan hanya 5 pantun pertama
 
-            # Hanya menampilkan 5 pantun pertama
-            df_hasil = df_hasil.head(5)
-
-            # Tampilkan hasil dalam tabel
+            # Tampilkan hasil
             st.write(f"Menampilkan maksimum 5 pantun yang mengandungi '{suku_kata}' dalam kategori {kategori_pilihan}:")
             selected_rows = st.data_editor(df_hasil, use_container_width=True, key="pantun_table", selection_mode="single")
 
-            # Menampilkan pantun yang dipilih
             selected_rows = st.session_state.get("pantun_table", {}).get("selected_rows", [])
             if selected_rows and len(selected_rows) > 0:
                 selected_pantun = df_hasil.iloc[selected_rows[0]]["pantun"]
@@ -82,12 +86,13 @@ if st.button("Cari"):
 
                     st.session_state.selected_pantun = formatted_pantun
         else:
-            st.warning("❌ Tiada hasil dijumpai.")
+            st.warning("⚠️ Tiada hasil dijumpai.")
     else:
         st.warning("⚠️ Sila masukkan suku kata untuk dicari.")
+st.markdown("</div>", unsafe_allow_html=True)
 
-# Tampilan pantun di sebelah kanan
-if st.session_state.selected_pantun:
+# Tampilan pantun yang dipilih
+if "selected_pantun" in st.session_state and st.session_state.selected_pantun:
     st.subheader("📜 Pantun Terpilih:")
     st.write(st.session_state.selected_pantun)
 
