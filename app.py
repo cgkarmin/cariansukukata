@@ -5,91 +5,56 @@ from functions import cari_suku_kata  # Pastikan fungsi ini tersedia
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Tambahkan CSS untuk mengunci ukuran input, dropdown, dan memberi warna
-st.markdown(
-    """
-    <style>
-    /* Pusatkan elemen utama */
-    .block-container {
-        display: flex;
-        justify-content: center;
-    }
-
-    /* Kunci ukuran dan warna input */
-    .custom-box input {
-        width: 320px !important;  
-        max-width: 320px !important;
-        height: 40px;
-        font-size: 16px;
-        background-color: #81D8D0 !important; /* Tiffany Blue */
-        color: black !important;
-        border-radius: 5px;
-        border: 1px solid #5A9E9F;
-        padding: 5px;
-    }
-
-    /* Kunci ukuran dan warna dropdown */
-    .custom-box select {
-        width: 220px !important;
-        max-width: 220px !important;
-        height: 40px;
-        font-size: 16px;
-        background-color: #D2B48C !important; /* Cokelat Muda */
-        color: black !important;
-        border-radius: 5px;
-        border: 1px solid #A47C5C;
-        padding: 5px;
-    }
-
-    /* Pusatkan tombol "Cari" */
-    div.stButton > button {
-        display: block;
-        margin: auto;
-        width: 150px;
-    }
-
-    /* Memastikan kotak input tidak melebar */
-    .fixed-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 # Judul aplikasi
 st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
 
-# Buat layout dengan ukuran tetap
-col1, col2, col3 = st.columns([1, 2, 1])  # Kolom tengah lebih besar agar input tidak melebar
+# Layout utama
+col1, col2, col3 = st.columns([1, 2, 1])  # Pastikan input berada di tengah
 
-with col2:  # Elemen input dan dropdown di kolom tengah
-    st.markdown('<div class="fixed-container">', unsafe_allow_html=True)
-
-    with st.container():
-        st.markdown('<div class="custom-box">', unsafe_allow_html=True)
-        suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with st.container():
-        st.markdown('<div class="custom-box">', unsafe_allow_html=True)
-        pilihan_kategori = {
-            "Rima Tengah 1": "RIMA_TENGAH_1",
-            "Rima Tengah 2": "RIMA_TENGAH_2",
-            "Rima Tengah 3": "RIMA_TENGAH_3",
-            "Rima Tengah 4": "RIMA_TENGAH_4",
-            "Rima Akhir 1": "RIMA_AKHIR_1",
-            "Rima Akhir 2": "RIMA_AKHIR_2",
-            "Rima Akhir 3": "RIMA_AKHIR_3",
-            "Rima Akhir 4": "RIMA_AKHIR_4"
+with col2:  # Pusatkan elemen input
+    # Warna kotak input Suku Kata (Tiffany Blue)
+    st.markdown("""
+        <style>
+        .suku-kata-input {
+            background-color: #81D8D0 !important;  /* Tiffany Blue */
+            color: black !important;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #5A9E9F;
+            width: 100%;
         }
-        kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
-        st.markdown('</div>', unsafe_allow_html=True)
+        </style>
+    """, unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
+    st.markdown(f'<div class="suku-kata-input">{suku_kata}</div>', unsafe_allow_html=True)
+
+    # Warna kotak dropdown Kategori (Cokelat Muda)
+    st.markdown("""
+        <style>
+        .kategori-dropdown {
+            background-color: #D2B48C !important;  /* Cokelat Muda */
+            color: black !important;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #A47C5C;
+            width: 100%;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    pilihan_kategori = {
+        "Rima Tengah 1": "RIMA_TENGAH_1",
+        "Rima Tengah 2": "RIMA_TENGAH_2",
+        "Rima Tengah 3": "RIMA_TENGAH_3",
+        "Rima Tengah 4": "RIMA_TENGAH_4",
+        "Rima Akhir 1": "RIMA_AKHIR_1",
+        "Rima Akhir 2": "RIMA_AKHIR_2",
+        "Rima Akhir 3": "RIMA_AKHIR_3",
+        "Rima Akhir 4": "RIMA_AKHIR_4"
+    }
+    kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
+    st.markdown(f'<div class="kategori-dropdown">{kategori_pilihan}</div>', unsafe_allow_html=True)
 
 # Tombol pencarian tetap di tengah
 st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
