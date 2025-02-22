@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from functions import cari_suku_kata  # Pastikan fungsi ini ada
+from functions import cari_suku_kata  # Pastikan fungsi ini tersedia
 
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
@@ -10,23 +10,21 @@ st.markdown(
     """
     <style>
     /* Kunci lebar input */
-    div[data-baseweb="input"] > div {
-        max-width: 350px !important;
-        width: 100% !important;
-        margin: auto;
+    div[data-baseweb="input"] {
+        width: 350px !important;  /* Lebar tetap */
+        margin: auto;             /* Pusatkan */
     }
 
     /* Kunci lebar dropdown */
-    div[data-baseweb="select"] > div {
-        max-width: 250px !important;
-        width: 100% !important;
-        margin: auto;
+    div[data-baseweb="select"] {
+        width: 250px !important;  /* Lebar tetap */
+        margin: auto;             /* Pusatkan */
     }
 
     /* Memastikan tombol "Cari" tetap di tengah */
-    div.stButton {
-        display: flex;
-        justify-content: center;
+    div.stButton > button {
+        display: block;
+        margin: auto;
     }
     </style>
     """,
@@ -36,13 +34,11 @@ st.markdown(
 # Judul aplikasi
 st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
 
-# Input dan kategori sejajar dalam satu baris
-col1, col2 = st.columns([1, 1])
-
-with col1:
-    suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
+# Input dan dropdown dalam satu baris, dikunci ukurannya
+col1, col2, col3 = st.columns([1, 1, 1])  # Pusatkan elemen
 
 with col2:
+    suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
     pilihan_kategori = {
         "Rima Tengah 1": "RIMA_TENGAH_1",
         "Rima Tengah 2": "RIMA_TENGAH_2",
@@ -55,7 +51,7 @@ with col2:
     }
     kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
 
-# Tombol pencarian di tengah
+# Tombol pencarian tetap di tengah
 st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
 if st.button("Cari"):
     if suku_kata:
