@@ -14,21 +14,38 @@ st.markdown(
         display: flex;
         justify-content: center;
     }
-    
+
     /* Kunci ukuran input */
-    div[data-testid="stTextInput"] {
-        width: 320px !important;
+    .custom-box input {
+        width: 320px !important;  
+        max-width: 320px !important;
+        height: 40px;
+        font-size: 16px;
+        margin: auto;
     }
 
     /* Kunci ukuran dropdown */
-    div[data-baseweb="select"] {
+    .custom-box select {
         width: 220px !important;
+        max-width: 220px !important;
+        height: 40px;
+        font-size: 16px;
+        margin: auto;
     }
 
     /* Pusatkan tombol "Cari" */
     div.stButton > button {
         display: block;
         margin: auto;
+        width: 150px;
+    }
+
+    /* Memastikan kotak input tidak melebar */
+    .fixed-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
     }
     </style>
     """,
@@ -38,14 +55,19 @@ st.markdown(
 # Judul aplikasi
 st.markdown("<h1 style='text-align: center;'>🔍 Carian Suku Kata dalam Pantun</h1>", unsafe_allow_html=True)
 
-# Gunakan columns dengan lebar tetap agar input dan dropdown tidak melebar
+# Buat layout dengan ukuran tetap
 col1, col2, col3 = st.columns([1, 2, 1])  # Kolom tengah lebih besar agar input tidak melebar
 
-with col2:
-    with st.container():
-        suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
+with col2:  # Elemen input dan dropdown di kolom tengah
+    st.markdown('<div class="fixed-container">', unsafe_allow_html=True)
 
     with st.container():
+        st.markdown('<div class="custom-box">', unsafe_allow_html=True)
+        suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10, help="Masukkan suku kata yang ingin dicari")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with st.container():
+        st.markdown('<div class="custom-box">', unsafe_allow_html=True)
         pilihan_kategori = {
             "Rima Tengah 1": "RIMA_TENGAH_1",
             "Rima Tengah 2": "RIMA_TENGAH_2",
@@ -57,8 +79,11 @@ with col2:
             "Rima Akhir 4": "RIMA_AKHIR_4"
         }
         kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()), help="Pilih jenis rima yang ingin dicari")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Tombol pencarian di tengah
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Tombol pencarian tetap di tengah
 st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
 if st.button("Cari"):
     if suku_kata:
