@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carian Suku Kata</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h2>Carian Suku Kata dalam Pantun</h2>
+    <form action="/" method="post">
+        <label for="suku_kata">Masukkan Suku Kata:</label>
+        <input type="text" id="suku_kata" name="suku_kata" required>
+        <label for="kategori">Pilih Kategori:</label>
+        <select id="kategori" name="kategori">
+            <option value="RIMA_TENGAH_1">Rima Tengah 1</option>
+            <option value="RIMA_TENGAH_2">Rima Tengah 2</option>
+            <option value="RIMA_TENGAH_3">Rima Tengah 3</option>
+            <option value="RIMA_TENGAH_4">Rima Tengah 4</option>
+            <option value="RIMA_AKHIR_1">Rima Akhir 1</option>
+            <option value="RIMA_AKHIR_2">Rima Akhir 2</option>
+            <option value="RIMA_AKHIR_3">Rima Akhir 3</option>
+            <option value="RIMA_AKHIR_4">Rima Akhir 4</option>
+        </select>
+        <button type="submit">Cari</button>
+    </form>
+</body>
+</html>
