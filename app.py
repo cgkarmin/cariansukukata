@@ -5,7 +5,7 @@ from functions import cari_suku_kata  # Pastikan fungsi ini tersedia
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Tambahkan CSS untuk mengunci ukuran input dan dropdown
+# Tambahkan CSS untuk mengunci ukuran input, dropdown, dan memberi warna
 st.markdown(
     """
     <style>
@@ -15,22 +15,30 @@ st.markdown(
         justify-content: center;
     }
 
-    /* Kunci ukuran input */
+    /* Kunci ukuran dan warna input */
     .custom-box input {
         width: 320px !important;  
         max-width: 320px !important;
         height: 40px;
         font-size: 16px;
-        margin: auto;
+        background-color: #81D8D0 !important; /* Tiffany Blue */
+        color: black !important;
+        border-radius: 5px;
+        border: 1px solid #5A9E9F;
+        padding: 5px;
     }
 
-    /* Kunci ukuran dropdown */
+    /* Kunci ukuran dan warna dropdown */
     .custom-box select {
         width: 220px !important;
         max-width: 220px !important;
         height: 40px;
         font-size: 16px;
-        margin: auto;
+        background-color: #D2B48C !important; /* Cokelat Muda */
+        color: black !important;
+        border-radius: 5px;
+        border: 1px solid #A47C5C;
+        padding: 5px;
     }
 
     /* Pusatkan tombol "Cari" */
