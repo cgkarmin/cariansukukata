@@ -5,12 +5,11 @@ from functions import cari_suku_kata
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Carian Suku Kata Pantun", layout="wide")
 
-# Gaya CSS untuk menggelapkan teks dalam jadual
+# Gaya CSS untuk mengawal saiz elemen
 st.markdown("""
     <style>
-        .stDataFrame div {
-            font-weight: bold;
-            color: black;
+        .stTextInput, .stSelectbox {
+            width: 300px !important;
         }
         .footer {
             position: fixed;
@@ -27,21 +26,25 @@ st.markdown("""
 # Tajuk utama
 st.title("🔍 Carian Suku Kata dalam Pantun")
 
-# Tukar nama dropdown supaya lebih mudah dibaca
-pilihan_kategori = {
-    "Rima Tengah 1": "RIMA_TENGAH_1",
-    "Rima Tengah 2": "RIMA_TENGAH_2",
-    "Rima Tengah 3": "RIMA_TENGAH_3",
-    "Rima Tengah 4": "RIMA_TENGAH_4",
-    "Rima Akhir 1": "RIMA_AKHIR_1",
-    "Rima Akhir 2": "RIMA_AKHIR_2",
-    "Rima Akhir 3": "RIMA_AKHIR_3",
-    "Rima Akhir 4": "RIMA_AKHIR_4"
-}
+# Gunakan layout kolum untuk menjimatkan ruang
+col1, col2 = st.columns([1, 2])  # Bahagian kiri untuk input, kanan untuk paparan pantun
 
-# Input pengguna
-suku_kata = st.text_input("Masukkan Suku Kata", "")
-kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()))
+with col1:
+    # Input pengguna (dipendekkan)
+    suku_kata = st.text_input("Masukkan Suku Kata", "", max_chars=10)
+
+    # Dropdown kategori (dipendekkan)
+    pilihan_kategori = {
+        "Rima Tengah 1": "RIMA_TENGAH_1",
+        "Rima Tengah 2": "RIMA_TENGAH_2",
+        "Rima Tengah 3": "RIMA_TENGAH_3",
+        "Rima Tengah 4": "RIMA_TENGAH_4",
+        "Rima Akhir 1": "RIMA_AKHIR_1",
+        "Rima Akhir 2": "RIMA_AKHIR_2",
+        "Rima Akhir 3": "RIMA_AKHIR_3",
+        "Rima Akhir 4": "RIMA_AKHIR_4"
+    }
+    kategori_pilihan = st.selectbox("Pilih Kategori", list(pilihan_kategori.keys()))
 
 # Simpan pantun terpilih dalam sesi Streamlit
 if "selected_pantun" not in st.session_state:
@@ -83,10 +86,11 @@ if st.button("Cari"):
     else:
         st.warning("Sila masukkan suku kata untuk dicari.")
 
-# Paparkan pantun dalam format serangkap 4 baris jika ada pilihan
-if st.session_state.selected_pantun:
-    st.subheader("📜 Pantun Terpilih:")
-    st.text_area("Serangkap Pantun", st.session_state.selected_pantun, height=150, disabled=True)
+# Paparkan pantun di bahagian kanan (col2)
+with col2:
+    if st.session_state.selected_pantun:
+        st.subheader("📜 Pantun Terpilih:")
+        st.text_area("Serangkap Pantun", st.session_state.selected_pantun, height=150, disabled=True)
 
 # Footer
 st.markdown('<div class="footer">© 2023-2025 Carian Suku Kata. v1. 2008-2025. Sebuah carian suku kata berguna untuk membantu pengguna mengarang pantun.</div>', unsafe_allow_html=True)
